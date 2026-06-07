@@ -1,7 +1,6 @@
 from app.database import Base
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Boolean
 from datetime import datetime
-
 
 class User(Base):
     __tablename__ = "users"
@@ -41,3 +40,4 @@ class User(Base):
         DateTime,
         nullable=True
     )
+
