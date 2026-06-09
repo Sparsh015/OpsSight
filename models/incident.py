@@ -1,6 +1,7 @@
 from datetime import datetime
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
 from app.database import Base
+from sqlalchemy.orm import relationship
 
 class Incident(Base):
     __tablename__ = "incidents"
@@ -13,3 +14,5 @@ class Incident(Base):
     resolved = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.now)
     resolved_at = Column(DateTime)
+
+    monitor = relationship("Monitor",back_populates="incidents")

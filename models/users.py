@@ -1,6 +1,7 @@
 from app.database import Base
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Boolean
 from datetime import datetime
+from sqlalchemy.orm import relationship
 
 class User(Base):
     __tablename__ = "users"
@@ -41,3 +42,4 @@ class User(Base):
         nullable=True
     )
 
+    monitors = relationship("Monitor", back_populates="user")

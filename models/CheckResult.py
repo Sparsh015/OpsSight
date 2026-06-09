@@ -1,6 +1,7 @@
 from app.database import Base
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Boolean
 from datetime import datetime
+from sqlalchemy.orm import relationship
 
 class CheckResult(Base):
     __tablename__ = "checkresults"
@@ -11,3 +12,5 @@ class CheckResult(Base):
     is_success = Column(Boolean, default = True)
     error_desc = Column(String(300), nullable = True)
     checked_at = Column(DateTime, default=datetime.now, nullable=False)
+
+    monitor = relationship("Monitor", back_populates="checkresults")
