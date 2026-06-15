@@ -13,4 +13,4 @@ class CheckResult(Base):
     error_desc = Column(String(300), nullable = True)
     checked_at = Column(DateTime, default=datetime.now, nullable=False)
 
-    monitor = relationship("Monitor", back_populates="checkresults")
+    monitor = relationship("Monitor", back_populates="check_results")
