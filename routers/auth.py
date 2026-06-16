@@ -1,8 +1,8 @@
 from fastapi import HTTPException, APIRouter
 from app.database import SessionLocal
 from models import User
-from schemas.user import UserSignup, UserResponse
-from auth.security import get_password_hash
+from schemas.user import UserLogin, UserSignup, UserResponse
+from auth.security import get_password_hash, verify_password
 
 router = APIRouter()
 
@@ -31,3 +31,34 @@ def signup(user : UserSignup):
     db.refresh(new_user)
 
     return new_user
+
+@router.post("/login")
+def login(user : UserLogin):
+    db = SessionLocal()
+    existing_user = db.query(User).filter(
+        User.email == user.email
+    ).first()
+
+    if not existing_user :
+        raise HTTPException(
+            status_code= 401,
+            detail = "user not found. Signup first."
+        )
+    
+    if not verify_password(
+        user.password, 
+        existing_user.password_hash
+    ):
+        raise HTTPException(
+            status_code= 401,
+            detail = "wrong password"
+        )
+    return {
+        "message" : "Login successful"
+    }
+
+
+
+
+
+
