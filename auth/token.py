@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from re import S
+from fastapi import HTTPException, status
 from jose import jwt
 import os
 
@@ -19,3 +19,18 @@ def create_access_token(data: dict):
         algorithm= ALGORITHM
     )
     return encoded_jwt
+
+def verify_access_token(token):
+    try :
+        payload = jwt.decode(
+            token,
+            SECRET_KEY,
+            algorithms= [ALGORITHM])
+        email = payload.get("sub")
+        return email
+    except:
+        raise HTTPException(
+            status_code= 401,
+            detail = "Invalid or expired token"
+        )
+    return email

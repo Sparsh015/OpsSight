@@ -3,6 +3,7 @@ from app.database import SessionLocal
 from models import User
 from schemas.user import UserLogin, UserSignup, UserResponse
 from auth.security import get_password_hash, verify_password
+from auth.token import create_access_token
 
 router = APIRouter()
 
@@ -53,11 +54,14 @@ def login(user : UserLogin):
             status_code= 401,
             detail = "wrong password"
         )
+    
+    access_token = create_access_token(
+        {'sub' : existing_user.email}
+    )
     return {
-        "message" : "Login successful"
+        "access_token" : access_token,
+        "token_type" : "bearer"
     }
-
-
 
 
 
