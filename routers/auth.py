@@ -1,9 +1,11 @@
-from fastapi import HTTPException, APIRouter
+from fastapi import Depends, HTTPException, APIRouter
 from app.database import SessionLocal
 from models import User
 from schemas.user import UserLogin, UserSignup, UserResponse
 from auth.security import get_password_hash, verify_password
-from auth.token import create_access_token
+from auth.token import create_access_token, get_current_user
+from fastapi import Depends
+
 
 router = APIRouter()
 
@@ -63,6 +65,10 @@ def login(user : UserLogin):
         "token_type" : "bearer"
     }
 
-
+@router.get("/me")
+def get_me(
+    current_user = Depends(get_current_user)
+    ):
+    return current_user
 
 
