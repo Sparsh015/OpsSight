@@ -1,11 +1,11 @@
 from fastapi import Depends, HTTPException, APIRouter
 from app.database import SessionLocal
-from models import User
+from models import User, monitor
 from schemas.user import UserLogin, UserSignup, UserResponse
 from auth.security import get_password_hash, verify_password
 from auth.token import create_access_token, get_current_user
 from fastapi import Depends
-
+from fastapi.security import OAuth2PasswordRequestForm
 
 router = APIRouter()
 
@@ -36,10 +36,12 @@ def signup(user : UserSignup):
     return new_user
 
 @router.post("/login")
-def login(user : UserLogin):
+def login(
+    form_data : OAuth2PasswordRequestForm = Depends()
+    ):
     db = SessionLocal()
     existing_user = db.query(User).filter(
-        User.email == user.email
+        User.email == form_data.username
     ).first()
 
     if not existing_user :
@@ -49,7 +51,7 @@ def login(user : UserLogin):
         )
     
     if not verify_password(
-        user.password, 
+        form_data.password, 
         existing_user.password_hash
     ):
         raise HTTPException(
@@ -70,3 +72,4 @@ def get_me(
     current_user = Depends(get_current_user)
     ):
     return current_user
+
