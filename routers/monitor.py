@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import query
 from auth.token import get_current_user
-from schemas.monitor import MonitorCreate, MonitorResponse
+from schemas.monitor import MonitorCreate, MonitorResponse, MonitorUpdate
 from app.database import get_db
 from auth.token import get_current_user
 from models import Monitor
@@ -40,7 +40,7 @@ def get_monitors(
 
     return monitors
 
-@router.get("/monitors/{monitor_id}")
+@router.get("/monitors/{monitor_id}", response_model= MonitorResponse)
 def get_monitor(
     monitor_id : int,
     current_user = Depends(get_current_user),
@@ -59,7 +59,7 @@ def get_monitor(
 
     return monitor
 
-@router.delete("/monitors/{monitor_id}")
+@router.delete("/monitors/{monitor_id}", response_model= MonitorResponse)
 def delete_monitor(
     monitor_id : int,
     current_user = Depends(get_current_user),
@@ -82,3 +82,33 @@ def delete_monitor(
     return {
     "message": "Monitor deleted successfully"
     }
+
+@router.put("/monitors/{monitor_id}", response_model= MonitorResponse)
+def update_monitor(
+    monitor_id : int,
+    monitor: MonitorUpdate,
+    db = Depends(get_db),
+    current_user = Depends(get_current_user)
+    ):
+    existing_monitor = db.query(Monitor).filter(
+        Monitor.id == monitor_id,
+        Monitor.user_id == current_user.id
+    ).first()
+
+    if not existing_monitor:
+        raise HTTPException(
+            status_code= 404,
+            detail = "Monitor not found"
+        )
+    
+    existing_monitor.name = monitor.name
+    existing_monitor.url = monitor.url
+    existing_monitor.method = monitor.method
+    existing_monitor.check_interval = monitor.check_interval
+    existing_monitor.latency_threshold = monitor.latency_threshold
+    existing_monitor.timeout_seconds = monitor.timeout_seconds
+    existing_monitor.is_active = monitor.is_active
+
+    db.commit()
+    db.refresh(existing_monitor)
+    return existing_monitor

@@ -21,3 +21,12 @@ class MonitorResponse(BaseModel):
 
     class Config: 
         from_attributes = True
+
+class MonitorUpdate(BaseModel):
+    name: str
+    url = str
+    method: str
+    check_interval: int
+    latency_threshold: int
+    timeout_seconds: int
+    is_active: bool
