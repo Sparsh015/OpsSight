@@ -24,7 +24,7 @@ class MonitorResponse(BaseModel):
 
 class MonitorUpdate(BaseModel):
     name: str
-    url = str
+    url : str
     method: str
     check_interval: int
     latency_threshold: int
