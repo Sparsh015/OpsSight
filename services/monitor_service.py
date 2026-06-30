@@ -1,6 +1,8 @@
 import time
 import httpx
 from models import CheckResult
+from services.incident_service import handle_incident
+
 
 def perform_monitor_check(
     monitor,
@@ -9,11 +11,11 @@ def perform_monitor_check(
     try:
         start_time = time.time()
         response = httpx.request(
-        method=monitor.method,
-        url=monitor.url,
-        timeout=monitor.timeout_seconds,
-        follow_redirects=True
-    )
+            method=monitor.method,
+            url=monitor.url,
+            timeout=monitor.timeout_seconds,
+            follow_redirects=True
+        )
 
         end_time = time.time()
         response_time = int((end_time - start_time) * 1000)
@@ -38,5 +40,10 @@ def perform_monitor_check(
     db.add(check_result)
     db.commit()
     db.refresh(check_result)
+    handle_incident(
+        monitor,
+        check_result,
+        db
+    )
 
     return check_result
