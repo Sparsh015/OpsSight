@@ -13,4 +13,11 @@ app.include_router(check_result)
 
 @app.on_event("startup")
 def start_scheduler():
+    print("starting scheduler")
     scheduler.start()
+
+@app.on_event("shutdown")
+def stop_scheduler():
+
+    scheduler.shutdown()
+

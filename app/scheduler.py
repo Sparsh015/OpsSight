@@ -1,4 +1,3 @@
-from sched import scheduler
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from app.database import SessionLocal
@@ -15,12 +14,13 @@ def check_all_monitors():
         ).all()
 
         for monitor in monitors:
+            print(monitor.name)
             perform_monitor_check(monitor, db)
     finally:
         db.close()
     
-    scheduler.add_job(
-        check_all_monitors,
-        "interval",
-        seconds = 10
-    )
+scheduler.add_job(
+    check_all_monitors,
+    "interval",
+    seconds = 10
+)
