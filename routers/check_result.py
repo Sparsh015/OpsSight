@@ -33,6 +33,25 @@ def check_monitor(
 
     return check_result
     
-    
+@router.get("/monitors/{monitor_id}/results", response_model=list[CheckResultResponse])
+def get_monitor_results(
+    monitor_id : int,
+    db = Depends(get_db),
+    current_user = Depends(get_current_user)
+    ):
+    monitor = db.query(Monitor).filter(
+        Monitor.id == monitor_id,
+        Monitor.user_id == current_user.id
+    ).first()
 
+    if not monitor:
+        raise HTTPException(
+            status_code= 404,
+            detail = "Monitor not found"
+        )
 
+    results = db.query(CheckResult).filter(
+        CheckResult.monitor_id == monitor_id
+    ).order_by(CheckResult.checked_at.desc()).all()
+
+    return results
