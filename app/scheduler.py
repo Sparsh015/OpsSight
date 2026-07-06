@@ -4,10 +4,12 @@ from app.database import SessionLocal
 from models import Monitor
 from services.monitor_service import perform_monitor_check
 from datetime import timedelta, datetime
+from app.logger import logger
 
 scheduler = BackgroundScheduler()
 
 def check_all_monitors():
+    logger.info("Running scheduled monitor checks")
     db = SessionLocal()
     try:
         monitors = db.query(Monitor).filter(
@@ -15,7 +17,6 @@ def check_all_monitors():
         ).all()
 
         for monitor in monitors:
-            print(monitor.name)
 
             if monitor.last_checked is None:
                 perform_monitor_check(monitor, db)
