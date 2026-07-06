@@ -3,6 +3,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from app.database import SessionLocal
 from models import Monitor
 from services.monitor_service import perform_monitor_check
+from datetime import timedelta, datetime
 
 scheduler = BackgroundScheduler()
 
@@ -15,12 +16,23 @@ def check_all_monitors():
 
         for monitor in monitors:
             print(monitor.name)
-            perform_monitor_check(monitor, db)
+
+            if monitor.last_checked is None:
+                perform_monitor_check(monitor, db)
+                continue
+
+            next_check_time = (
+                monitor.last_checked + timedelta(seconds=monitor.check_interval)
+            )
+            if datetime.now() >= next_check_time:
+                perform_monitor_check(monitor, db)
+
     finally:
         db.close()
     
 scheduler.add_job(
     check_all_monitors,
     "interval",
-    seconds = 10
+    seconds = 10,
+    max_instances = 3
 )

@@ -2,7 +2,7 @@ import time
 import httpx
 from models import CheckResult
 from services.incident_service import handle_incident
-
+from datetime import datetime 
 
 def perform_monitor_check(
     monitor,
@@ -38,6 +38,7 @@ def perform_monitor_check(
         )
 
     db.add(check_result)
+    monitor.last_checked_at = datetime.now()
     db.commit()
     db.refresh(check_result)
     handle_incident(
