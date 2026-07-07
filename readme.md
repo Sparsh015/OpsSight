@@ -12,7 +12,7 @@ https://opssight.onrender.com
 
 Swagger Documentation:
 
-https://your-render-url.onrender.com/docs
+https://opssight.onrender.com/docs
 
 ## Features
 
