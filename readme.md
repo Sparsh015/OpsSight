@@ -20,6 +20,7 @@ It allows users to monitor APIs, automatically perform health checks, track resp
 
 ## Tech Stack
 
+- Python
 - FastAPI
 - PostgreSQL
 - SQLAlchemy ORM
