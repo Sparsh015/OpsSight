@@ -22,3 +22,9 @@ def stop_scheduler():
 
     scheduler.shutdown()
 
+@app.get("/")
+def home():
+    return {
+        "message": "OpsSight API Monitoring System",
+        "docs": "/docs"
+    }
