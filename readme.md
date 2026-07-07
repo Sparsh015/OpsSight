@@ -1,7 +1,18 @@
+
 # OpsSight - API Monitoring System
 
 OpsSight is a backend API monitoring platform built using FastAPI.  
 It allows users to monitor APIs, automatically perform health checks, track response times, detect failures, and manage incidents.
+
+## 🚀 Live Demo
+
+API Base URL:
+
+https://opssight.onrender.com
+
+Swagger Documentation:
+
+https://your-render-url.onrender.com/docs
 
 ## Features
 
