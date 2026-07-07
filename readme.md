@@ -203,16 +203,4 @@ Run server
 ```bash
 uvicorn app.main:app --reload
 ```
-
-## Future Improvements
-
-- Async API checks
-- Email notifications
-- Docker support
-- Redis queue system
-- Advanced monitoring graphs
-- CI/CD pipeline
-
----
-
 Built as a production-style backend monitoring system.
